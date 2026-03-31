@@ -501,7 +501,7 @@ function renderList() {
         '"></div>' +
         '<a class="a-link" href="' +
         esc(it.path) +
-        '" title="Open: ' +
+        '" target="_blank" title="Open: ' +
         esc(it.path) +
         '">' +
         '<div class="a-badge ' +
