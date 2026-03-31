@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Assignment Collection</title>
+    <link rel="stylesheet" href="task-list.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-top">
+        <div class="ornament">&#9670; &#9670; &#9670;</div>
+        <button class="auth-btn" id="authBtn" aria-label="Login">
+          <svg viewBox="0 0 24 24" class="auth-icon">
+            <path
+              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+            />
+          </svg>
+          <span id="authLabel">Admin Login</span>
+        </button>
+      </div>
+      <h1>My Assignment Collection</h1>
+      <p>A curated index of all coursework across subjects</p>
+    </header>
+
+    <main class="container">
+      <!-- Stats -->
+      <section class="stats-row" aria-label="Statistics">
+        <div class="stat-chip">
+          <span class="stat-num" id="sTotal">0</span>
+          <span class="stat-lbl">Total</span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-num" id="sDone">0</span>
+          <span class="stat-lbl">Completed</span>
+        </div>
+        <div class="stat-chip">
+          <span class="stat-num" id="sPending">0</span>
+          <span class="stat-lbl">Pending</span>
+        </div>
+        <div class="stat-chip accent">
+          <span class="stat-num" id="sWeb">0</span>
+          <span class="stat-lbl">Web Prog</span>
+        </div>
+        <div class="stat-chip accent">
+          <span class="stat-num" id="sMobile">0</span>
+          <span class="stat-lbl">Mobile</span>
+        </div>
+        <div class="stat-chip accent">
+          <span class="stat-num" id="sDb">0</span>
+          <span class="stat-lbl">Database</span>
+        </div>
+      </section>
+
+      <!-- Toolbar (admin-only parts hidden by default) -->
+      <section class="toolbar">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24">
+            <path
+              d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+          </svg>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name or path..."
+            aria-label="Search"
+          />
+        </div>
+        <div class="filter-group">
+          <button class="fbtn active" data-filter="all">All</button>
+          <button class="fbtn" data-filter="pending">Pending</button>
+          <button class="fbtn" data-filter="done">Done</button>
+        </div>
+        <button
+          class="btn-primary admin-only"
+          id="btnAdd"
+          style="display: none"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          </svg>
+          Add Assignment
+        </button>
+      </section>
+
+      <!-- Subject Tabs -->
+      <nav class="subject-tabs" aria-label="Subject filter">
+        <button class="tab active" data-subject="all">
+          <span class="tab-icon">&#9776;</span> All Subjects
+        </button>
+        <button class="tab" data-subject="web">
+          <span class="tab-dot web"></span> Web Programming
+        </button>
+        <button class="tab" data-subject="mobile">
+          <span class="tab-dot mobile"></span> Mobile Programming
+        </button>
+        <button class="tab" data-subject="database">
+          <span class="tab-dot database"></span> Database
+        </button>
+      </nav>
+
+      <!-- Assignment List -->
+      <section
+        class="assignment-list"
+        id="assignmentList"
+        aria-label="Assignments"
+      ></section>
+    </main>
+
+    <!-- Setup Warning (shown if Firebase not configured) -->
+    <div class="setup-banner" id="setupBanner" style="display: none">
+      <div class="setup-content">
+        <h3>Firebase Not Configured</h3>
+        <p>
+          Open <code>script.js</code> and fill in your
+          <strong>FIREBASE_CONFIG</strong> object with your Firebase project
+          credentials.
+        </p>
+        <button
+          class="btn-ghost"
+          onclick="
+            document.getElementById('setupBanner').style.display = 'none'
+          "
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-orn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--border)">
+          <path
+            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+          />
+        </svg>
+      </div>
+      My Assignment Collection &mdash; Quick access to all your work
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="overlay" id="loginOverlay" role="dialog" aria-modal="true">
+      <div class="modal">
+        <div class="modal-topline"></div>
+        <div class="modal-head">
+          <h2>Admin Login</h2>
+          <button class="btn-icon close-btn" id="loginClose" aria-label="Close">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="admin@example.com"
+            />
+          </div>
+          <div class="field">
+            <label for="loginPass">Password</label>
+            <input
+              type="password"
+              id="loginPass"
+              placeholder="Enter password"
+            />
+          </div>
+          <div id="loginError" class="field-error" style="display: none"></div>
+          <div class="modal-foot">
+            <button class="btn-ghost" id="loginCancel">Cancel</button>
+            <button class="btn-primary" id="loginSubmit">Sign In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="overlay" id="formOverlay" role="dialog" aria-modal="true">
+      <div class="modal">
+        <div class="modal-topline"></div>
+        <div class="modal-head">
+          <h2 id="formTitle">Add Assignment</h2>
+          <button class="btn-icon close-btn" id="formClose" aria-label="Close">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <label for="fName">Assignment Name</label>
+            <input type="text" id="fName" placeholder="e.g. Task List App" />
+          </div>
+          <div class="field">
+            <label for="fPath"
+              >File Path
+              <span class="hint">(relative from this file)</span></label
+            >
+            <input
+              type="text"
+              id="fPath"
+              placeholder="e.g. ./tugasku/index.html"
+            />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="fSubject">Subject</label>
+              <select id="fSubject">
+                <option value="web">Web Programming</option>
+                <option value="mobile">Mobile Programming</option>
+                <option value="database">Database</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fStatus">Status</label>
+              <select id="fStatus">
+                <option value="pending">Pending</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fNote">Note <span class="hint">(optional)</span></label>
+            <input
+              type="text"
+              id="fNote"
+              placeholder="e.g. Week 3, Chapter 5"
+            />
+          </div>
+          <div class="modal-foot">
+            <button class="btn-ghost" id="formCancel">Cancel</button>
+            <button class="btn-primary" id="formSave">Save Assignment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toasts -->
+    <div class="toast-stack" id="toastStack"></div>
+
+    <!-- Firebase SDK (compat version, works with script tags) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
