@@ -1,5 +1,3 @@
-Masalahnya ada code block di dalam code block — markdown tidak support nesting gitu. Ini versi yang udah diperbaiki:
-
 ```markdown
 # My Assignment Collection
 
@@ -55,7 +53,7 @@ A classical-styled web application to organize and quickly access coding assignm
 
 ## File Structure
 
-```
+```text
 my-projects/
 ├── task-list.html          # Main page
 ├── task-list.css           # Stylesheet
@@ -112,7 +110,7 @@ Go to [Firebase Console](https://console.firebase.google.com) and create a new p
 
 In **Firestore** → **Rules**, replace everything with:
 
-<pre>
+```text
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -122,7 +120,7 @@ service cloud.firestore {
     }
   }
 }
-</pre>
+```
 
 > This allows **anyone to read** but **only authenticated users to write**.
 
